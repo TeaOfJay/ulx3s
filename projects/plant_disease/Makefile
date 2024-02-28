@@ -14,18 +14,18 @@ BSIM_CPPFILES= ./cpp/main.cpp
 #$(ROOTDIR)/cpp/PcieBdpi.cpp \
 	$(ROOTDIR)/cpp/ShmFifo.cpp
 
-all: Top.bsv $(wildcard $(BSVPATH)/*.bsv) $(wildcard processor/*.bsv) cpp/main.cpp
+all: HwMain.bsv $(wildcard $(BSVPATH)/*.bsv) $(wildcard ./*.bsv) 
 	rm -rf build
 	mkdir -p build
 	cd $(BUILD_DIR); apio init -b ulx3s-85f -p .
-	bsc  $(BSCFLAGS) $(BSCFLAGS_SYNTH) -remove-dollar -p +:$(BSVPATH_ALL) -verilog -u -g mkTop ./Top.bsv 
+	bsc  $(BSCFLAGS) $(BSCFLAGS_SYNTH) -remove-dollar -p +:$(BSVPATH_ALL) -verilog -u -g mkHwMain ./HwMain.bsv 
 	#cp verilog/*.v build
 	cp $(BSVPATH)/*.lpf build
 	cp $(BSVPATH)/bsv_verilog/*.v build 
 	cd build; apio verify 
 	cd build; apio build -v
 
-bsim: Top.bsv $(wildcard $(BSVPATH)/*.bsv) $(wildcard processor/*.bsv) cpp/main.cpp
+bsim: Top.bsv $(wildcard $(BSVPATH)/*.bsv) cpp/main.cpp
 	mkdir -p $(BSIM_DIR)
 	bsc $(BSCFLAGS) $(BSCFLAGS_BSIM) $(DEBUGFLAGS) -p +:$(BSVPATH_ALL) -sim -u -g mkTop_bsim ./Top.bsv  
 	bsc $(BSCFLAGS) $(BSCFLAGS_BSIM) $(DEBUGFLAGS) -sim -e mkTop_bsim -o $(BSIM_DIR)/bsim $(BSIM_DIR)/*.ba $(BSIM_CPPFILES)

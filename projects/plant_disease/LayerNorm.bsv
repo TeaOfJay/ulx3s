@@ -7,11 +7,9 @@ import SimpleFloat::*;
 import FloatingPoint::*;
 
 
-interface MACIfc;
-	// implements ax + (...)
-	// pipelined 
-	method Action clear;
-	method Action put(Float a, Float b);
+interface LayerNormIfc(dim);
+	method Action put(Float w);
+	//should we precompute mean and variance?
 
 	method Float get;
 	method Bool resultReady;
@@ -78,10 +76,6 @@ module mkMAC(MACIfc);
 	method Float get = accum;
 	method Bool  resultReady = ~inflight;
 endmodule
-
-
-
-
 
 
 
